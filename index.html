@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J'y serai – Isokan Omo Yoruba Bénin</title>
+<meta name="description" content="Crée ton affiche personnalisée pour la 5e Assemblée Générale Ordinaire d'Isokan Omo Yoruba Bénin, le samedi 14 novembre 2026 à Ouidah.">
+<meta property="og:title" content="J'y serai – Isokan Omo Yoruba Bénin">
+<meta property="og:description" content="Ajoute ta photo et partage ton affiche. 5e AGO, samedi 14 novembre 2026, Ouidah.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rouge: #d91e26;
+    --rouge-fonce: #a31f24;
+    --vert: #0b8a3e;
+    --fond: #efefef;
+    --encre: #1b1b1b;
+    --blanc: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--fond);
+    color: var(--encre);
+    min-height: 100vh;
+    -webkit-text-size-adjust: 100%;
+  }
+  header {
+    background: var(--rouge-fonce);
+    color: var(--blanc);
+    padding: 20px 20px 22px;
+    border-bottom: 6px solid var(--vert);
+  }
+  header p { margin: 0 0 6px; font-weight: 500; font-size: 0.85rem; opacity: 0.9; }
+  header h1 { margin: 0; font-weight: 800; font-size: clamp(1.35rem, 5.5vw, 2rem); line-height: 1.15; }
+  main { max-width: 560px; margin: 0 auto; padding: 18px 16px 40px; }
+
+  .scene {
+    background: var(--blanc);
+    border-radius: 14px;
+    padding: 8px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.12);
+  }
+  .toile { position: relative; line-height: 0; }
+  canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    touch-action: none;
+    background: #fff;
+  }
+  canvas.glisse { cursor: grab; }
+  canvas.glisse:active { cursor: grabbing; }
+  .invite {
+    position: absolute;
+    left: 2%; top: 17.7%;
+    width: 47%; height: 53.7%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    background: none; border: 0; cursor: pointer;
+    font-family: inherit; font-weight: 800; font-size: clamp(0.9rem, 3.6vw, 1.15rem);
+    color: var(--rouge); line-height: 1.2; text-align: center; padding: 8px;
+  }
+  .invite[hidden] { display: none; }
+  .invite svg { width: 44px; height: 44px; }
+  .invite:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--vert); outline-offset: 3px; }
+
+  .commandes { margin-top: 16px; display: grid; gap: 12px; }
+  .zoom { display: none; align-items: center; gap: 12px; font-weight: 700; font-size: 0.9rem; }
+  .zoom input { flex: 1; accent-color: var(--rouge); height: 28px; }
+  .aide { display: none; margin: 0; font-size: 0.85rem; color: #555; }
+
+  button.btn {
+    font-family: inherit; font-weight: 800; font-size: 1.05rem;
+    border: 0; border-radius: 12px; padding: 15px 18px; cursor: pointer;
+    min-height: 52px; width: 100%;
+  }
+  .btn-rouge { background: var(--rouge); color: var(--blanc); }
+  .btn-vert { background: var(--vert); color: var(--blanc); }
+  .btn-clair { background: var(--blanc); color: var(--encre); box-shadow: inset 0 0 0 2px #cfcfcf; }
+  .btn:active { transform: translateY(1px); }
+  .btn[hidden] { display: none; }
+
+  .pret .zoom { display: flex; }
+  .pret .aide { display: block; }
+
+  .pied { margin-top: 22px; font-size: 0.8rem; color: #555; text-align: center; }
+  .message { margin: 0; font-size: 0.9rem; color: var(--rouge-fonce); font-weight: 700; min-height: 1.2em; }
+  input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <p>5<sup>e</sup> Assemblée Générale Ordinaire · Samedi 14 novembre 2026 · Ouidah</p>
+  <h1>Crée ton affiche « J'y serai »</h1>
+</header>
+
+<main id="app">
+  <div class="scene">
+    <div class="toile">
+      <canvas id="toile" width="1020" height="1080" aria-label="Aperçu de ton affiche"></canvas>
+      <button class="invite" id="invite" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Ajoute ta photo ici
+      </button>
+    </div>
+  </div>
+
+  <div class="commandes">
+    <button class="btn btn-rouge" id="choisir" type="button">Choisir ma photo</button>
+    <p class="aide">Glisse la photo pour la cadrer. Pince l'écran ou utilise le curseur pour zoomer.</p>
+    <label class="zoom"><span>Zoom</span>
+      <input type="range" id="zoom" min="1" max="4" step="0.01" value="1" aria-label="Zoom de la photo">
+    </label>
+    <p class="message" id="message" role="status"></p>
+    <button class="btn btn-vert" id="telecharger" type="button" hidden>Télécharger mon affiche</button>
+    <button class="btn btn-vert" id="partager" type="button" hidden>Partager mon affiche</button>
+    <button class="btn btn-clair" id="changer" type="button" hidden>Changer de photo</button>
+  </div>
+
+  <p class="pied">Ta photo reste sur ton téléphone : elle n'est envoyée nulle part.</p>
+  <input type="file" id="fichier" accept="image/*">
+</main>
+
+<script>
+(function () {
+  // Zone du cadre (dans l'affiche de 1020 x 1080 px)
+  var CADRE = { x: 21, y: 191, w: 479, h: 580 };
+  var LARGEUR = 1020, HAUTEUR = 1080;
+
+  var toile = document.getElementById('toile');
+  var ctx = toile.getContext('2d');
+  var app = document.getElementById('app');
+  var fichier = document.getElementById('fichier');
+  var invite = document.getElementById('invite');
+  var btnChoisir = document.getElementById('choisir');
+  var btnTelecharger = document.getElementById('telecharger');
+  var btnPartager = document.getElementById('partager');
+  var btnChanger = document.getElementById('changer');
+  var curseur = document.getElementById('zoom');
+  var message = document.getElementById('message');
+
+  var affiche = new Image();
+  var afficheOk = false;
+  var photo = null;      // image de l'utilisateur
+  var zoom = 1;
+  var cx = 0, cy = 0;    // centre de la photo, en pixels de l'affiche
+
+  affiche.onload = function () { afficheOk = true; dessiner(); };
+  affiche.onerror = function () { message.textContent = "L'affiche n'a pas pu être chargée. Recharge la page."; };
+  affiche.src = 'affiche-cadre.webp';
+
+  function base() { return Math.max(CADRE.w / photo.naturalWidth, CADRE.h / photo.naturalHeight); }
+
+  function limiter() {
+    var l = photo.naturalWidth * base() * zoom;
+    var h = photo.naturalHeight * base() * zoom;
+    var minX = CADRE.x + CADRE.w - l / 2, maxX = CADRE.x + l / 2;
+    var minY = CADRE.y + CADRE.h - h / 2, maxY = CADRE.y + h / 2;
+    cx = Math.min(Math.max(cx, minX), maxX);
+    cy = Math.min(Math.max(cy, minY), maxY);
+  }
+
+  function dessiner() {
+    if (!afficheOk) return;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, LARGEUR, HAUTEUR);
+    if (photo) {
+      var l = photo.naturalWidth * base() * zoom;
+      var h = photo.naturalHeight * base() * zoom;
+      ctx.drawImage(photo, cx - l / 2, cy - h / 2, l, h);
+    }
+    ctx.drawImage(affiche, 0, 0, LARGEUR, HAUTEUR);
+  }
+
+  function chargerPhoto(file) {
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { message.textContent = 'Choisis un fichier image (JPG, PNG…).'; return; }
+    message.textContent = '';
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      photo = img;
+      zoom = 1;
+      curseur.value = 1;
+      cx = CADRE.x + CADRE.w / 2;
+      cy = CADRE.y + CADRE.h / 2;
+      limiter();
+      app.classList.add('pret');
+      toile.classList.add('glisse');
+      invite.hidden = true;
+      btnChoisir.hidden = true;
+      btnTelecharger.hidden = false;
+      btnChanger.hidden = false;
+      activerPartage();
+      dessiner();
+      URL.revokeObjectURL(url);
+    };
+    img.onerror = function () { message.textContent = "Cette photo n'a pas pu être lue. Essaie-en une autre."; };
+    img.src = url;
+  }
+
+  function ouvrir() { fichier.value = ''; fichier.click(); }
+  btnChoisir.addEventListener('click', ouvrir);
+  btnChanger.addEventListener('click', ouvrir);
+  invite.addEventListener('click', ouvrir);
+  fichier.addEventListener('change', function () { chargerPhoto(fichier.files[0]); });
+
+  // --- Cadrage : glisser, pincer, curseur, molette ---
+  var pointeurs = {};
+  var distanceDebut = 0, zoomDebut = 1;
+
+  function echelle() { return LARGEUR / toile.getBoundingClientRect().width; }
+  function nbPointeurs() { return Object.keys(pointeurs).length; }
+  function distance() {
+    var p = Object.keys(pointeurs).map(function (k) { return pointeurs[k]; });
+    return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
+  }
+
+  toile.addEventListener('pointerdown', function (e) {
+    if (!photo) return;
+    toile.setPointerCapture(e.pointerId);
+    pointeurs[e.pointerId] = { x: e.clientX, y: e.clientY };
+    if (nbPointeurs() === 2) { distanceDebut = distance(); zoomDebut = zoom; }
+  });
+  toile.addEventListener('pointermove', function (e) {
+    if (!photo || !pointeurs[e.pointerId]) return;
+    var avant = pointeurs[e.pointerId];
+    var dx = e.clientX - avant.x, dy = e.clientY - avant.y;
+    pointeurs[e.pointerId] = { x: e.clientX, y: e.clientY };
+    if (nbPointeurs() === 1) {
+      cx += dx * echelle();
+      cy += dy * echelle();
+    } else if (nbPointeurs() === 2 && distanceDebut > 0) {
+      zoom = Math.min(4, Math.max(1, zoomDebut * distance() / distanceDebut));
+      curseur.value = zoom;
+    }
+    limiter();
+    dessiner();
+  });
+  function relacher(e) { delete pointeurs[e.pointerId]; if (nbPointeurs() === 2) { distanceDebut = distance(); zoomDebut = zoom; } }
+  toile.addEventListener('pointerup', relacher);
+  toile.addEventListener('pointercancel', relacher);
+
+  curseur.addEventListener('input', function () {
+    if (!photo) return;
+    zoom = parseFloat(curseur.value);
+    limiter();
+    dessiner();
+  });
+  toile.addEventListener('wheel', function (e) {
+    if (!photo) return;
+    e.preventDefault();
+    zoom = Math.min(4, Math.max(1, zoom * (e.deltaY < 0 ? 1.06 : 0.94)));
+    curseur.value = zoom;
+    limiter();
+    dessiner();
+  }, { passive: false });
+
+  // --- Export ---
+  function enBlob() {
+    return new Promise(function (resolve) { toile.toBlob(resolve, 'image/jpeg', 0.93); });
+  }
+
+  btnTelecharger.addEventListener('click', function () {
+    enBlob().then(function (blob) {
+      if (!blob) { message.textContent = "Impossible de créer l'image. Réessaie."; return; }
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'jyserai-isokan-omo-yoruba.jpg';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      message.textContent = 'Affiche téléchargée. Cherche-la dans ta galerie ou tes téléchargements.';
+    });
+  });
+
+  function activerPartage() {
+    try {
+      var test = new File([''], 't.jpg', { type: 'image/jpeg' });
+      if (navigator.canShare && navigator.canShare({ files: [test] })) btnPartager.hidden = false;
+    } catch (err) { /* partage non disponible */ }
+  }
+
+  btnPartager.addEventListener('click', function () {
+    enBlob().then(function (blob) {
+      var f = new File([blob], 'jyserai-isokan-omo-yoruba.jpg', { type: 'image/jpeg' });
+      return navigator.share({
+        files: [f],
+        title: "J'y serai – Isokan Omo Yoruba Bénin",
+        text: "J'y serai ! 5e AGO d'Isokan Omo Yoruba Bénin, samedi 14 novembre 2026 à Ouidah."
+      });
+    }).catch(function (err) {
+      if (err && err.name !== 'AbortError') message.textContent = "Le partage a échoué. Utilise plutôt « Télécharger mon affiche ».";
+    });
+  });
+})();
+</script>
+</body>
+</html>
